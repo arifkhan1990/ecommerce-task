@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->text('description')->nullable();
-            $table->double('base_price');
+            $table->decimal('base_price', 8, 2)->nullable();
             $table->string('base_image')->nullable();
             $table->boolean('is_published')->default(false);
             $table->integer('base_stock')->default(0);
-            $table->json('attributes');
-            $table->json('attributes_options');
+            $table->json('attributes')->nullable();
+            $table->json('attributes_options')->nullable();
             $table->timestamps();
         });
     }
