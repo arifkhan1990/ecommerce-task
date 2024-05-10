@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductVariantResource;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 
@@ -28,13 +29,13 @@ class ProductVariantController extends Controller
     }
 
     // Retrieve a single product variant
-    public function show(ProductVariant $variant)
+    public function show(ProductVariant $product_variant)
     {
-        return response()->json($variant);
+        return response()->json($product_variant);
     }
 
     // Update a product variant
-    public function update(Request $request, ProductVariant $variant)
+    public function update(Request $request, ProductVariant $product_variant)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -42,14 +43,14 @@ class ProductVariantController extends Controller
             // Add validation rules for other fields as needed
         ]);
 
-        $variant->update($request->all());
-        return response()->json($variant, 200);
+        $product_variant->update($request->all());
+        return response()->json($product_variant, 200);
     }
 
     // Delete a product variant
-    public function destroy(ProductVariant $variant)
+    public function destroy(ProductVariant $product_variant)
     {
-        $variant->delete();
+        $product_variant->delete();
         return response()->json(null, 204);
     }
 }

@@ -40,6 +40,7 @@ class ProductStoreController extends Controller
         foreach ($csvData as $row) {
 
             $product = Null;
+
             if ($row['Type'] === 'variant') {
                 $product = Product::where('id', $row['Root Id'])->first();
             } else {
@@ -60,19 +61,18 @@ class ProductStoreController extends Controller
                 $productVariant->name = $row['Name'];
                 $productVariant->sku_code = $row['SKU'];
                 $productVariant->is_published = $row['Published'];
-                $productVariant->stock = $row['Total Stock'];
+                $productVariant->stock = $productVariant->stock ? $productVariant->stock + $row['Total Stock'] : $row['Total Stock'];
                 $productVariant->sale_price = $row['Sale Price'];
                 $productVariant->regular_price = $row['Regular Price'];
                 $productVariant->image = $row['Image'];
                 // Set other variant properties...
                 $productVariant->save();
+                $totalStockCounts = ProductVariant::where('product_id', $row['Root Id'])->sum('stock');
+                $product->base_stock = $totalStockCounts;
+                $product->save();
             } else if ($row['Type'] === 'variable') {
                 // If product doesn't exist, create a new one
-                $totalStockCount = Product::leftJoin('product_variants', 'products.id', '=', 'product_variants.product_id')
-                    ->selectRaw('SUM(product_variants.stock) AS total_stock_count')
-                    ->groupBy('products.id')
-                    ->get()
-                    ->sum('total_stock_count');
+
 
                 if (!$product) {
                     $product = new Product();
@@ -80,7 +80,7 @@ class ProductStoreController extends Controller
                 $product->name = $row['Name'];
                 $product->is_published = $row['Published'] ?? 0;
                 $product->base_image = $row['Image'];
-                $product->base_stock = $totalStockCount;
+                $product->base_stock = 0;
                 $product->save();
             } else if ($row['Type'] === 'simple') {
                 if (!$product) {
@@ -89,7 +89,7 @@ class ProductStoreController extends Controller
                 $product->name = $row['Name'];
                 $product->is_published = $row['Published'] ?? 0;
                 $product->base_image = $row['Image'];
-                $product->base_stock = $row['Total Stock'];
+                $product->base_stock = $product->base_stock ? $product->base_stock + $row['Total Stock'] : $row['Total Stock'];
                 $product->base_price = $row['Regular Price'];
                 $product->save();
             }
@@ -196,6 +196,38 @@ class ProductStoreController extends Controller
                 $product->save();
             } else {
                 return response()->json(['message' => "Product not found for ID: {$row['Root Id']}", 'code' => 404]);
+            }
+
+            if ($row['Type'] === 'variant' and $productVariant) {
+                if ($productVariant->variants) {
+                    $existingOptions = collect($productVariant->variants);
+
+                    // Merge new attribute options without duplicates
+                    foreach ($attributeOptionList as $attributeOption) {
+                        $existingOptionIndex = $existingOptions->search(function ($option) use ($attributeOption) {
+                            return $option['attribute_id'] === $attributeOption['attribute_id'];
+                        });
+
+                        if ($existingOptionIndex !== false) {
+                            $existingValues = $existingOptions[$existingOptionIndex]['values'];
+                            $newValues = array_values(array_unique(array_merge($existingValues, $attributeOption['values'])));
+                            $existingOptions->put($existingOptionIndex, [
+                                'attribute_id' => $attributeOption['attribute_id'],
+                                'values' => $newValues
+                            ]);
+                        } else {
+                            $existingOptions->push($attributeOption); // Add new attribute option
+                        }
+                    }
+
+                    $productVariant->variants = $existingOptions->toArray(); // Convert back to array
+                } else {
+                    // No existing attribute options, set them directly
+                    $productVariant->variants = $attributeOptionList;
+                }
+
+                // print_r($product);
+                $productVariant->save();
             }
         }
 

@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ProductVariant extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'sku_code', 'product_id', 'image', 'regular_price', 'sale_price', 'stock', 'is_published'];
+    protected $fillable = ['name', 'sku_code', 'product_id', 'image', 'regular_price', 'sale_price', 'stock', 'variants', 'is_published'];
 
     protected $casts = [
         'image' => 'json',
+        'variants' => 'json',
         'is_published' => 'boolean'
     ];
 

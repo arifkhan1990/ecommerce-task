@@ -22,6 +22,7 @@ return new class extends Migration
             $table->double('sale_price')->nullable();
             $table->integer('stock')->default(0);
             $table->boolean('is_published')->default(0);
+            $table->json('variants')->nullable();
             $table->timestamps();
         });
     }

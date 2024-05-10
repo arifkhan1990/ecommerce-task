@@ -27,27 +27,27 @@ class AttributeOptionController extends Controller
     }
 
     // Retrieve a single attribute option
-    public function show(AttributeOption $option)
+    public function show(AttributeOption $attribute_option)
     {
-        return response()->json($option);
+        return response()->json($attribute_option);
     }
 
     // Update an attribute option
-    public function update(Request $request, AttributeOption $option)
+    public function update(Request $request, AttributeOption $attribute_option)
     {
         $request->validate([
             'attribute_id' => 'required|exists:attributes,id',
             'value' => 'required|string',
         ]);
 
-        $option->update($request->all());
-        return response()->json($option, 200);
+        $attribute_option->update($request->all());
+        return response()->json($attribute_option, 200);
     }
 
     // Delete an attribute option
-    public function destroy(AttributeOption $option)
+    public function destroy(AttributeOption $attribute_option)
     {
-        $option->delete();
+        $attribute_option->delete();
         return response()->json(null, 204);
     }
 }

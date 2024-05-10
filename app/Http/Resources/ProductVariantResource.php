@@ -23,6 +23,7 @@ class ProductVariantResource extends JsonResource
             'sale_price' => $this->sale_price,
             'stock' => $this->stock,
             'is_published' => $this->is_published,
+            'attributes' => $this->variants
         ];
     }
 }
