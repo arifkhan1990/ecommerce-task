@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\AttributeOptionController;
+use App\Http\Controllers\ProductStoreController;
 use App\Http\Controllers\ProductVariantController;
 
 /*
@@ -27,3 +28,5 @@ Route::apiResource('products', ProductController::class);
 Route::apiResource('attributes', AttributeController::class);
 Route::apiResource('attribute-options', AttributeOptionController::class);
 Route::apiResource('product-variants', ProductVariantController::class);
+
+Route::post('/csv-to-db-data-store', [ProductStoreController::class, 'csvToDbProductStore']);
