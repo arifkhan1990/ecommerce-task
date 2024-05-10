@@ -1,0 +1,7 @@
+ID,Type,SKU,Name,Published,class,In Stock,Total Stock,Sale Price,Regular Price,Image,Root Id,Attribute 1 name,Attribute 1 value,Attribute 2 name,Attribute 2 value,Attribute 3 name,Attribute 3 value
+1,variable,,Men Cloths,1,,1,,,,https://example.com/tshirt.jpg,,Size,"sm,md,lg",Color,"Red,Green,Blue",Fabric,"Cotton, Silk"
+2,variant,SKU002,Jeans,1,parent,1,50,39.99,49.99,https://example.com/jeans.jpg,1,Size,"md,xl",Color,Blue,Fabric,Denim
+3,variant,SKU003,Sneakers,1,parent,1,30,49.99,59.99,https://example.com/sneakers.jpg,1,Size,"lg, xxl",Color,"White,Black",Fabric,"Leather,Cotton"
+4,variant,SKU004,Dress,1,parent,0,0,59.99,69.99,https://example.com/dress.jpg,1,Size,"sm,lg,xl",Color,Black,Fabric,Silk
+5,variant,SKU001,T-Shirt,0,parent,1,100,19.99,24.99,https://example.com/tshirt.jpg,1,Size,lg,Color,"Red,Pink",Fabric,Cotton
+6,simple,SKU100,Gold Nose Pin,1,,1,12,300,320,https://example.com/tshirt.jpg,,,,,,,
